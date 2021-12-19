@@ -23,7 +23,7 @@ func GenerateBody(c *fiber.Ctx) error {
 
 	var res inter.Response
 	p := new(inter.Request)
-	if err := c.BodyParser(&p); err != nil {
+	if err := c.BodyParser(p); err != nil {
 		res = inter.Response{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
