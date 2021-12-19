@@ -50,8 +50,8 @@ func assignment(specials bool, numbers bool, lowerCases bool, upperCases bool) i
 	}
 
 	return special + number + lowerCase + upperCase
-}
-
+}https://gist.github.com/dopey/c69559607800d2f2f90b1b1ed4e550fb
+//
 func generate(value int, length int) string {
 
 	var password string
