@@ -22,9 +22,8 @@ func GenerateBody(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
 	var res inter.Response
-
 	p := new(inter.Request)
-	if err := c.BodyParser(p); err != nil {
+	if err := c.BodyParser(&p); err != nil {
 		res = inter.Response{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
@@ -33,6 +32,8 @@ func GenerateBody(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
+	// asdf := string(c.Body())
+	// fmt.Println(asdf)
 	password := controllers.GenerateResponse(p)
 	res = inter.Response{
 		Status:   fiber.StatusOK,

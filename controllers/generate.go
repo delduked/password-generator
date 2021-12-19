@@ -64,49 +64,56 @@ func generate(value int, length int) string {
 }
 func iterateOverFunctions(value int) string {
 	switch value {
-	case 0:
+	case 0000:
 		return ""
-	case 1:
+	case 0001:
 		return characters[rand.Intn(len(constants.Lower))]
-	case 10:
+	case 0010:
 		return characters[rand.Intn(len(constants.Upper))]
-	case 11:
+	case 0011:
 		characters = append(constants.Lower, constants.Upper...)
 		characters = append(characters, constants.Lower...)
-		return characters[rand.Intn(len(characters)-1)]
-	case 100:
+		return characters[rand.Intn(len(characters))]
+	case 0100:
 		return characters[rand.Intn(len(constants.Numbers))]
-	case 101:
+	case 0101:
 		characters = append(constants.Numbers, constants.Lower...)
-		return characters[rand.Intn(len(characters)-1)]
+		return characters[rand.Intn(len(characters))]
 	case 110:
 		characters = append(constants.Numbers, constants.Upper...)
-		return characters[rand.Intn(len(characters)-1)]
+		return characters[rand.Intn(len(characters))]
 	case 111:
 		characters = append(constants.Numbers, constants.Upper...)
 		characters = append(characters, constants.Lower...)
-		return characters[rand.Intn(len(characters)-1)]
+		return characters[rand.Intn(len(characters))]
 	case 1000:
-		return characters[rand.Intn(len(constants.Special)-1)]
+		return characters[rand.Intn(len(constants.Special))]
 	case 1001:
 		characters = append(constants.Special, constants.Lower...)
-		return characters[rand.Intn(len(constants.Special)-1)]
+		return characters[rand.Intn(len(characters))]
+	case 1010:
+		characters = append(constants.Special, constants.Upper...)
+		return characters[rand.Intn(len(characters))]
+	case 1011:
+		characters = append(constants.Special, constants.Upper...)
+		characters = append(characters, constants.Lower...)
+		return characters[rand.Intn(len(characters))]
 	case 1100:
 		characters = append(constants.Special, constants.Numbers...)
-		return characters[rand.Intn(len(constants.Special)-1)]
+		return characters[rand.Intn(len(characters))]
 	case 1101:
 		characters = append(constants.Special, constants.Numbers...)
 		characters = append(characters, constants.Lower...)
-		return characters[rand.Intn(len(characters)-1)]
+		return characters[rand.Intn(len(characters))]
 	case 1110:
 		characters = append(constants.Special, constants.Numbers...)
 		characters = append(characters, constants.Upper...)
-		return characters[rand.Intn(len(characters)-1)]
+		return characters[rand.Intn(len(characters))]
 	case 1111:
 		characters = append(constants.Special, constants.Numbers...)
-		characters = append(characters, constants.Numbers...)
+		characters = append(characters, constants.Upper...)
 		characters = append(characters, constants.Lower...)
-		return characters[rand.Intn(len(characters)-1)]
+		return characters[rand.Intn(len(characters))]
 	}
 
 	return "*"
