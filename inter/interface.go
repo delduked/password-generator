@@ -9,9 +9,7 @@ type Request struct {
 }
 
 type Response struct {
+	Status   int    `json:"status"`
+	Error    error  `json:"error"`
 	Password string `json:"password"`
-}
-type StatusResponse struct {
-	Status int   `json:"status"`
-	Error  error `json:"error"`
 }
