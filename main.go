@@ -10,7 +10,7 @@ func main() {
 	app := fiber.New()
 
 	app.Get("/healthcheck", routes.Health)
-	app.Get("/generate", routes.Generate)
+	app.Post("/generate", routes.Generate)
 
 	app.Listen(":8080")
 }

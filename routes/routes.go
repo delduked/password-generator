@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/gofiber/fiber/v2"
+	"gitlab.com/alienate/password-generator/controllers"
 	"gitlab.com/alienate/password-generator/inter"
 )
 
@@ -15,8 +16,17 @@ func Health(c *fiber.Ctx) error {
 }
 
 func Generate(c *fiber.Ctx) error {
+	c.Accepts("application/json")
+	// Post request with params
+	// requires length int, specials bool, numbers bool, lowerCases bool, upperCases bool
+	p := new(inter.Request)
+	if err := c.BodyParser(p); err != nil {
+		return err
+	}
 
-	test := inter.Response{"Generate password"}
+	password := controllers.GenerateResponse(p)
+	test := inter.Response{password}
+
 	return responseJson(test, c)
 
 }
