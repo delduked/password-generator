@@ -1,10 +1,5 @@
 package controllers
 
-//password length
-//include speicals
-// include numbers
-//inlcude lowerfase
-//include uppsercase
 import (
 	"math/rand"
 
@@ -30,28 +25,28 @@ func assignment(specials bool, numbers bool, lowerCases bool, upperCases bool) i
 	var lowerCase int
 	var upperCase int
 
-	if specials {
-		special = 1
-	} else {
-		special = 0
-	}
-
-	if numbers {
-		number = 3
-	} else {
-		number = 0
-	}
-
 	if lowerCases {
-		lowerCase = 5
+		lowerCase = 1
 	} else {
 		lowerCase = 0
 	}
 
 	if upperCases {
-		upperCase = 7
+		upperCase = 10
 	} else {
 		upperCase = 0
+	}
+
+	if numbers {
+		number = 100
+	} else {
+		number = 0
+	}
+
+	if specials {
+		special = 1000
+	} else {
+		special = 0
 	}
 
 	return special + number + lowerCase + upperCase
@@ -68,76 +63,53 @@ func generate(value int, length int) string {
 	return password
 }
 func iterateOverFunctions(value int) string {
-	// if return value is 16 or 0, client wants all options enabled
-	if value == 0 || value == 16 {
+	switch value {
+	case 0:
+		return ""
+	case 1:
+		return characters[rand.Intn(len(constants.Lower))]
+	case 10:
+		return characters[rand.Intn(len(constants.Upper))]
+	case 11:
 		characters = append(constants.Lower, constants.Upper...)
-		characters = append(characters, constants.Numbers...)
-		characters = append(characters, constants.Special...)
-
-		//loopOverTheAmountOfCharacters := rand.Intn(characters.Length)
+		characters = append(characters, constants.Lower...)
 		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 1, client wants special
-	if value == 1 {
-		characters = constants.Special
+	case 100:
+		return characters[rand.Intn(len(constants.Numbers))]
+	case 101:
+		characters = append(constants.Numbers, constants.Lower...)
 		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 3, client wants numbers
-	if value == 3 {
-		characters = constants.Numbers
+	case 110:
+		characters = append(constants.Numbers, constants.Upper...)
 		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 4, client wants specials and numbers
-	if value == 4 {
+	case 111:
+		characters = append(constants.Numbers, constants.Upper...)
+		characters = append(characters, constants.Lower...)
+		return characters[rand.Intn(len(characters)-1)]
+	case 1000:
+		return characters[rand.Intn(len(constants.Special)-1)]
+	case 1001:
+		characters = append(constants.Special, constants.Lower...)
+		return characters[rand.Intn(len(constants.Special)-1)]
+	case 1100:
 		characters = append(constants.Special, constants.Numbers...)
+		return characters[rand.Intn(len(constants.Special)-1)]
+	case 1101:
+		characters = append(constants.Special, constants.Numbers...)
+		characters = append(characters, constants.Lower...)
 		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 5, client wants lowercase
-	if value == 5 {
-		characters = constants.Lower
+	case 1110:
+		characters = append(constants.Special, constants.Numbers...)
+		characters = append(characters, constants.Upper...)
 		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 6, cient wants lowercase and specials
-	if value == 6 {
-		characters = constants.Lower
-		characters = append(characters, constants.Special...)
-		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 7, client wants uppercase
-	if value == 7 {
-		characters = constants.Upper
-		return characters[rand.Intn(len(characters)-1)]
-	}
-
-	// if value is 8, client wants uppercase and specials
-	if value == 8 {
-		characters = constants.Upper
-		characters = append(characters, constants.Special...)
-		return characters[rand.Intn(len(characters)-1)]
-	}
-	//if value is 9, client wants lowercase, specials and numbers
-	if value == 9 {
-		characters = constants.Lower
-		characters = append(characters, constants.Special...)
+	case 1111:
+		characters = append(constants.Special, constants.Numbers...)
 		characters = append(characters, constants.Numbers...)
+		characters = append(characters, constants.Lower...)
 		return characters[rand.Intn(len(characters)-1)]
 	}
 
-	// if value is 11, client wants uppercase specials and numbers
-	if value == 9 {
-		characters = constants.Upper
-		characters = append(characters, constants.Special...)
-		characters = append(characters, constants.Numbers...)
-		return characters[rand.Intn(len(characters)-1)]
-	}
-	// if return value is 16 or 0, client wants all options enabled
-	return "asdf"
+	return "*"
 }
 func checkLength(length int) int {
 	if length > 16 {
