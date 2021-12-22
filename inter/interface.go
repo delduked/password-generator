@@ -34,3 +34,7 @@ type ModelResponse struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+type AllPasswordResponse struct {
+	Status    int `json:"status"`
+	Passwords []SavedFields
+}

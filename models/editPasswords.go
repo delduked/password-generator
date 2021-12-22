@@ -68,6 +68,33 @@ func UpdatePassword(c *fiber.Ctx) error {
 	return handlers.SaveResponse(status, c)
 }
 
-// func DeletePassword(ctx *fiber.Ctx) error {
+func GetPasswords(c *fiber.Ctx) error {
+	c.Accepts("application/json")
 
-// }
+	var res inter.NewPasswordResponse
+	p := new(inter.SavedFields)
+
+	if err := c.BodyParser(p); err != nil {
+		res = inter.NewPasswordResponse{
+			Status:   fiber.StatusBadRequest,
+			Error:    err,
+			Password: "nil",
+		}
+		return handlers.Response(res, c)
+	}
+
+	allPassword, err := controllers.GetAll()
+	if err != nil {
+		status := inter.SaveResponse{
+			Status: fiber.StatusBadRequest,
+			Error:  err,
+		}
+		return handlers.SaveResponse(status, c)
+	}
+
+	status := inter.AllPasswordResponse{
+		Status:    fiber.StatusOK,
+		Passwords: allPassword,
+	}
+	return handlers.AllPasswordResponse(status, c)
+}

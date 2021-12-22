@@ -15,3 +15,7 @@ func SaveResponse(res inter.SaveResponse, ctx *fiber.Ctx) error {
 	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
 	return json.NewEncoder(writer).Encode(res)
 }
+func AllPasswordResponse(res []inter.SavedFields, ctx *fiber.Ctx) error {
+	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
+	return json.NewEncoder(writer).Encode(res)
+}
