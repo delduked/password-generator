@@ -1,6 +1,6 @@
 package inter
 
-type Request struct {
+type NewPasswordRequest struct {
 	Length  int  `json:"length" query:"length"`
 	Lower   bool `json:"lower" query:"lower"`
 	Upper   bool `json:"upper" query:"upper"`
@@ -8,8 +8,29 @@ type Request struct {
 	Special bool `json:"special" query:"special"`
 }
 
-type Response struct {
+type NewPasswordResponse struct {
 	Status   int    `json:"status"`
 	Error    error  `json:"error"`
+	Password string `json:"password"`
+}
+type SaveResponse struct {
+	Status int   `json:"status"`
+	Error  error `json:"error"`
+}
+type SavedFields struct {
+	Key      string `json:"key"`
+	Account  error  `json:"account"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+type NewPasswordReqSave struct {
+	Account  error  `json:"account"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+type ModelResponse struct {
+	Error    error  `json:"error"`
+	Account  error  `json:"account"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }

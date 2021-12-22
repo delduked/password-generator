@@ -8,7 +8,7 @@ import (
 	"gitlab.com/alienate/password-generator/inter"
 )
 
-func GenerateResponse(req *inter.Request) string {
+func GenerateResponse(req *inter.NewPasswordRequest) string {
 
 	value := assignment(req.Special, req.Number, req.Lower, req.Upper)
 	validatedLength := checkLength(req.Length)

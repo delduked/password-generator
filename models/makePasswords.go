@@ -1,4 +1,4 @@
-package routes
+package models
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -9,7 +9,7 @@ import (
 
 func Health(c *fiber.Ctx) error {
 
-	status := inter.Response{
+	status := inter.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: "nil",
@@ -21,10 +21,10 @@ func Health(c *fiber.Ctx) error {
 func GenerateBody(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	var res inter.Response
-	p := new(inter.Request)
+	var res inter.NewPasswordResponse
+	p := new(inter.NewPasswordRequest)
 	if err := c.BodyParser(p); err != nil {
-		res = inter.Response{
+		res = inter.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -35,7 +35,7 @@ func GenerateBody(c *fiber.Ctx) error {
 	// asdf := string(c.Body())
 	// fmt.Println(asdf)
 	password := controllers.GenerateResponse(p)
-	res = inter.Response{
+	res = inter.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: password,
@@ -45,10 +45,10 @@ func GenerateBody(c *fiber.Ctx) error {
 
 }
 func GenerateParams(c *fiber.Ctx) error {
-	var res inter.Response
-	p := new(inter.Request)
+	var res inter.NewPasswordResponse
+	p := new(inter.NewPasswordRequest)
 	if err := c.QueryParser(p); err != nil {
-		res = inter.Response{
+		res = inter.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -58,7 +58,7 @@ func GenerateParams(c *fiber.Ctx) error {
 
 	password := controllers.GenerateResponse(p)
 
-	res = inter.Response{
+	res = inter.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: password,

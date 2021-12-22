@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"gitlab.com/alienate/password-generator/routes"
+	"gitlab.com/alienate/password-generator/models"
 )
 
 func main() {
@@ -12,9 +12,18 @@ func main() {
 
 	app.Use(cors.New())
 
-	app.Get("/healthcheck", routes.Health)
-	app.Post("/generateBody", routes.GenerateBody)
-	app.Get("/generateParams", routes.GenerateParams)
+	// health check
+	app.Get("/healthcheck", models.Health)
+
+	// Generate password
+	app.Post("/generateBody", models.GenerateBody)
+	app.Get("/generateParams", models.GenerateParams)
+
+	// Password endpoints
+	//app.Get("/password", routes.GetPasswords)
+	app.Post("/password", models.SavePassword)
+	app.Patch("/password", models.UpdatePassword)
+	// app.Delete("/password", routes.DeletePassword)
 
 	app.Listen(":8080")
 }
