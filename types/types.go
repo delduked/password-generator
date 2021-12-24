@@ -9,22 +9,22 @@ type NewPasswordRequest struct {
 }
 
 type NewPasswordResponse struct {
-	Status   int    `json:"status"`
-	Error    error  `json:"error"`
-	Password string `json:"password"`
+	Status   int    `json:"status" query:"status"`
+	Error    error  `json:"error" query:"error"`
+	Password string `json:"password" query:"password"`
 }
-type SaveResponse struct {
+type Response struct {
 	Status int   `json:"status"`
 	Error  error `json:"error"`
 }
 type SavedFields struct {
 	Key      string `json:"key"`
-	Account  error  `json:"account"`
+	Account  string `json:"account"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 type NewPasswordReqSave struct {
-	Account  error  `json:"account"`
+	Account  string `json:"account"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -35,6 +35,7 @@ type ModelResponse struct {
 	Password string `json:"password"`
 }
 type AllPasswordResponse struct {
-	Status    int `json:"status"`
+	Status    int   `json:"status"`
+	Error     error `json:"error"`
 	Passwords []SavedFields
 }

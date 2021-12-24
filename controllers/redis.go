@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	"gitlab.com/alienate/password-generator/config"
@@ -16,6 +18,9 @@ func Save(value *types.NewPasswordReqSave) (string, error) {
 		rdb.HSet(config.RedisCtx, key, "Account", value.Account)
 		rdb.HSet(config.RedisCtx, key, "Username", value.Username)
 		rdb.HSet(config.RedisCtx, key, "Password", value.Password)
+		fmt.Println(value.Account)
+		fmt.Println(value.Username)
+		fmt.Println(value.Password)
 		return nil
 	})
 
@@ -28,12 +33,13 @@ func Save(value *types.NewPasswordReqSave) (string, error) {
 }
 func GetAll() ([]types.SavedFields, error) {
 
-	var allFields []types.SavedFields
 	// Scan all fields into the model.
+	var allFields []types.SavedFields
 
 	// Not sure about the star
 	err := config.Rdb.HGetAll(config.RedisCtx, "*").Scan(&allFields)
 	if err != nil {
+		fmt.Println(allFields)
 		return allFields, err
 	}
 
