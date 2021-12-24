@@ -23,7 +23,8 @@ func main() {
 	app.Get("/generateParams", models.GenerateParams)
 
 	// Password endpoints
-	app.Get("/password", models.GetPasswords)
+	app.Get("/passwords", models.GetPasswords)
+	app.Get("/password/:key", models.GetKeyedField)
 	app.Post("/password", models.SavePassword)
 	app.Patch("/password", models.UpdatePassword)
 	// app.Delete("/password", routes.DeletePassword)

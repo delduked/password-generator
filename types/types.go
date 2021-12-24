@@ -1,41 +1,56 @@
 package types
 
 type NewPasswordRequest struct {
-	Length  int  `json:"length" query:"length"`
-	Lower   bool `json:"lower" query:"lower"`
-	Upper   bool `json:"upper" query:"upper"`
-	Number  bool `json:"number" query:"number"`
-	Special bool `json:"special" query:"special"`
+	Length  int  `json:"Length" query:"Length"`
+	Lower   bool `json:"Lower" query:"Lower"`
+	Upper   bool `json:"Upper" query:"Upper"`
+	Number  bool `json:"Number" query:"Number"`
+	Special bool `json:"Special" query:"Special"`
 }
 
 type NewPasswordResponse struct {
-	Status   int    `json:"status" query:"status"`
-	Error    error  `json:"error" query:"error"`
-	Password string `json:"password" query:"password"`
+	Status   int    `json:"Status" query:"Status"`
+	Error    error  `json:"Error" query:"Error"`
+	Password string `json:"Password" query:"Password"`
 }
 type Response struct {
-	Status int   `json:"status"`
-	Error  error `json:"error"`
+	Status int   `json:"Status"`
+	Error  error `json:"Error"`
 }
 type SavedFields struct {
-	Key      string `json:"key"`
-	Account  string `json:"account"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Key      string `json:"Key"`
+	Account  string `json:"Account"`
+	Username string `json:"Username"`
+	Password string `json:"Password"`
 }
 type NewPasswordReqSave struct {
-	Account  string `json:"account"`
+	Account  string `json:"Account"`
 	Username string `json:"username"`
-	Password string `json:"password"`
+	Password string `json:"Password"`
+}
+type KeyedField struct {
+	Account  string `json:"Account" redis:"Account"`
+	Username string `json:"Username" redis:"Username"`
+	Password string `json:"Password" redis:"Password"`
 }
 type ModelResponse struct {
-	Error    error  `json:"error"`
-	Account  error  `json:"account"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Error    error  `json:"Error"`
+	Account  error  `json:"Account"`
+	Username string `json:"Username"`
+	Password string `json:"Password"`
 }
 type AllPasswordResponse struct {
-	Status    int   `json:"status"`
-	Error     error `json:"error"`
+	Status    int   `json:"Status"`
+	Error     error `json:"Error"`
+	Passwords []SavedFields
+}
+type KeyedResponse struct {
+	Status int   `json:"Status"`
+	Error  error `json:"Error"`
+	Fields KeyedField
+}
+type Test struct {
+	Status    int   `json:"Status"`
+	Error     error `json:"Error"`
 	Passwords []SavedFields
 }

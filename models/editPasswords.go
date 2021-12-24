@@ -68,18 +68,6 @@ func UpdatePassword(c *fiber.Ctx) error {
 }
 
 func GetPasswords(c *fiber.Ctx) error {
-	c.Accepts("application/json")
-
-	p := new(types.SavedFields)
-
-	if err := c.BodyParser(p); err != nil {
-		res := types.Response{
-			Status: fiber.StatusBadRequest,
-			Error:  err,
-		}
-		fmt.Println(res)
-		return handlers.Response(res, c)
-	}
 
 	allPassword, err := controllers.GetAll()
 	if err != nil {
@@ -91,11 +79,33 @@ func GetPasswords(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	res := types.AllPasswordResponse{
+	res := types.Test{
 		Status:    fiber.StatusOK,
 		Error:     err,
 		Passwords: allPassword,
 	}
 	fmt.Println(res)
-	return handlers.AllPasswordResponse(res, c)
+	return handlers.Test(res, c)
+}
+func GetKeyedField(c *fiber.Ctx) error {
+	key := c.Params("key")
+	fmt.Println(key)
+
+	KeyedField, err := controllers.GetKeyedPassword(key)
+	if err != nil {
+		res := types.Response{
+			Status: fiber.StatusBadRequest,
+			Error:  err,
+		}
+		fmt.Println(res)
+		return handlers.Response(res, c)
+	}
+
+	res := types.KeyedResponse{
+		Status: fiber.StatusOK,
+		Error:  err,
+		Fields: KeyedField,
+	}
+	fmt.Println(res)
+	return handlers.KeyedResponse(res, c)
 }

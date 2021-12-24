@@ -34,16 +34,52 @@ func Save(value *types.NewPasswordReqSave) (string, error) {
 func GetAll() ([]types.SavedFields, error) {
 
 	// Scan all fields into the model.
-	var allFields []types.SavedFields
+	//	var keyedField []types.KeyedField
+	savedFields := []types.SavedFields{}
+	var keyedField types.KeyedField
 
 	// Not sure about the star
-	err := config.Rdb.HGetAll(config.RedisCtx, "*").Scan(&allFields)
+	length, err := config.Rdb.Keys(config.RedisCtx, "*").Result()
 	if err != nil {
-		fmt.Println(allFields)
-		return allFields, err
+		return savedFields, err
 	}
 
-	return allFields, nil
+	for i, j := range length {
+		err := config.Rdb.HGetAll(config.RedisCtx, j).Scan(&keyedField)
+		if err != nil {
+			fmt.Println(keyedField)
+			return savedFields, err
+		}
+		fmt.Println(i)
+		savedField := types.SavedFields{
+			Key:      j,
+			Account:  keyedField.Account,
+			Username: keyedField.Username,
+			Password: keyedField.Password,
+		}
+		fmt.Println(keyedField)
+		savedFields = append(savedFields, savedField)
+	}
+
+	fmt.Println(length)
+
+	return savedFields, err
+
+}
+func GetKeyedPassword(key string) (types.KeyedField, error) {
+
+	var keyedField types.KeyedField
+
+	// Not sure the key
+	err := config.Rdb.HGetAll(config.RedisCtx, key).Scan(&keyedField)
+	//err := config.Rdb.HMGet(config.RedisCtx, key).Scan(keyedField)
+	//err := config.Rdb.HGetAll(config.RedisCtx, key).Scan(&KeyedField)
+	if err != nil {
+		fmt.Println(keyedField)
+		return keyedField, err
+	}
+	fmt.Println(keyedField)
+	return keyedField, nil
 
 }
 func Update(value *types.SavedFields) (string, error) {
