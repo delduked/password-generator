@@ -4,17 +4,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/alienate/password-generator/controllers"
 	"gitlab.com/alienate/password-generator/handlers"
-	"gitlab.com/alienate/password-generator/inter"
+	"gitlab.com/alienate/password-generator/types"
 )
 
 func SavePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	var res inter.NewPasswordResponse
-	p := new(inter.NewPasswordReqSave)
+	var res types.NewPasswordResponse
+	p := new(types.NewPasswordReqSave)
 
 	if err := c.BodyParser(p); err != nil {
-		res = inter.NewPasswordResponse{
+		res = types.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -24,13 +24,13 @@ func SavePassword(c *fiber.Ctx) error {
 
 	_, err := controllers.Save(p)
 	if err != nil {
-		status := inter.SaveResponse{
+		status := types.SaveResponse{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
 		return handlers.SaveResponse(status, c)
 	}
-	status := inter.SaveResponse{
+	status := types.SaveResponse{
 		Status: fiber.StatusOK,
 		Error:  nil,
 	}
@@ -41,11 +41,11 @@ func SavePassword(c *fiber.Ctx) error {
 func UpdatePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	var res inter.NewPasswordResponse
-	p := new(inter.SavedFields)
+	var res types.NewPasswordResponse
+	p := new(types.SavedFields)
 
 	if err := c.BodyParser(p); err != nil {
-		res = inter.NewPasswordResponse{
+		res = types.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -55,13 +55,13 @@ func UpdatePassword(c *fiber.Ctx) error {
 
 	_, err := controllers.Update(p)
 	if err != nil {
-		status := inter.SaveResponse{
+		status := types.SaveResponse{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
 		return handlers.SaveResponse(status, c)
 	}
-	status := inter.SaveResponse{
+	status := types.SaveResponse{
 		Status: fiber.StatusOK,
 		Error:  nil,
 	}
@@ -71,11 +71,11 @@ func UpdatePassword(c *fiber.Ctx) error {
 func GetPasswords(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	var res inter.NewPasswordResponse
-	p := new(inter.SavedFields)
+	var res types.NewPasswordResponse
+	p := new(types.SavedFields)
 
 	if err := c.BodyParser(p); err != nil {
-		res = inter.NewPasswordResponse{
+		res = types.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -85,14 +85,14 @@ func GetPasswords(c *fiber.Ctx) error {
 
 	allPassword, err := controllers.GetAll()
 	if err != nil {
-		status := inter.SaveResponse{
+		status := types.SaveResponse{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
 		return handlers.SaveResponse(status, c)
 	}
 
-	status := inter.AllPasswordResponse{
+	status := types.AllPasswordResponse{
 		Status:    fiber.StatusOK,
 		Passwords: allPassword,
 	}

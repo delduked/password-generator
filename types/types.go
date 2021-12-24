@@ -1,4 +1,4 @@
-package inter
+package types
 
 type NewPasswordRequest struct {
 	Length  int  `json:"length" query:"length"`

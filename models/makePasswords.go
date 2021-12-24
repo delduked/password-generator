@@ -4,12 +4,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/alienate/password-generator/controllers"
 	"gitlab.com/alienate/password-generator/handlers"
-	"gitlab.com/alienate/password-generator/inter"
+	"gitlab.com/alienate/password-generator/types"
 )
 
 func Health(c *fiber.Ctx) error {
 
-	status := inter.NewPasswordResponse{
+	status := types.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: "nil",
@@ -21,10 +21,10 @@ func Health(c *fiber.Ctx) error {
 func GenerateBody(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	var res inter.NewPasswordResponse
-	p := new(inter.NewPasswordRequest)
+	var res types.NewPasswordResponse
+	p := new(types.NewPasswordRequest)
 	if err := c.BodyParser(p); err != nil {
-		res = inter.NewPasswordResponse{
+		res = types.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -35,7 +35,7 @@ func GenerateBody(c *fiber.Ctx) error {
 	// asdf := string(c.Body())
 	// fmt.Println(asdf)
 	password := controllers.GenerateResponse(p)
-	res = inter.NewPasswordResponse{
+	res = types.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: password,
@@ -45,10 +45,10 @@ func GenerateBody(c *fiber.Ctx) error {
 
 }
 func GenerateParams(c *fiber.Ctx) error {
-	var res inter.NewPasswordResponse
-	p := new(inter.NewPasswordRequest)
+	var res types.NewPasswordResponse
+	p := new(types.NewPasswordRequest)
 	if err := c.QueryParser(p); err != nil {
-		res = inter.NewPasswordResponse{
+		res = types.NewPasswordResponse{
 			Status:   fiber.StatusBadRequest,
 			Error:    err,
 			Password: "nil",
@@ -58,7 +58,7 @@ func GenerateParams(c *fiber.Ctx) error {
 
 	password := controllers.GenerateResponse(p)
 
-	res = inter.NewPasswordResponse{
+	res = types.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: password,

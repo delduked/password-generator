@@ -4,10 +4,10 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	"gitlab.com/alienate/password-generator/config"
-	"gitlab.com/alienate/password-generator/inter"
+	"gitlab.com/alienate/password-generator/types"
 )
 
-func Save(value *inter.NewPasswordReqSave) (string, error) {
+func Save(value *types.NewPasswordReqSave) (string, error) {
 
 	key := (uuid.New()).String()
 
@@ -26,9 +26,9 @@ func Save(value *inter.NewPasswordReqSave) (string, error) {
 	return "success", nil
 
 }
-func GetAll() ([]inter.SavedFields, error) {
+func GetAll() ([]types.SavedFields, error) {
 
-	var allFields []inter.SavedFields
+	var allFields []types.SavedFields
 	// Scan all fields into the model.
 
 	// Not sure about the star
@@ -40,7 +40,7 @@ func GetAll() ([]inter.SavedFields, error) {
 	return allFields, nil
 
 }
-func Update(value *inter.SavedFields) (string, error) {
+func Update(value *types.SavedFields) (string, error) {
 
 	// Set some fields.
 	_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
