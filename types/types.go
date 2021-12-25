@@ -17,7 +17,8 @@ type Response struct {
 	Status int   `json:"Status"`
 	Error  error `json:"Error"`
 }
-type SavedFields struct {
+
+type SavedField struct {
 	Key      string `json:"Key"`
 	Account  string `json:"Account"`
 	Username string `json:"Username"`
@@ -33,19 +34,18 @@ type KeyedField struct {
 	Username string `json:"Username" redis:"Username"`
 	Password string `json:"Password" redis:"Password"`
 }
-type ModelResponse struct {
-	Error    error  `json:"Error"`
-	Account  error  `json:"Account"`
-	Username string `json:"Username"`
-	Password string `json:"Password"`
-}
-type AllPasswordResponse struct {
-	Status    int   `json:"Status"`
-	Error     error `json:"Error"`
-	Passwords []SavedFields
-}
 type KeyedResponse struct {
 	Status int   `json:"Status"`
 	Error  error `json:"Error"`
 	Fields KeyedField
+}
+type SavedFieldResponse struct {
+	Status int   `json:"Status"`
+	Error  error `json:"Error"`
+	Field  SavedField
+}
+type SavedFieldsResponse struct {
+	Status int   `json:"Status"`
+	Error  error `json:"Error"`
+	Fields []SavedField
 }

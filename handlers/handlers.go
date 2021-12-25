@@ -16,15 +16,15 @@ func NewPasswordResponse(res types.NewPasswordResponse, ctx *fiber.Ctx) error {
 	return json.NewEncoder(writer).Encode(res)
 }
 
-func AllPasswordResponse(res types.AllPasswordResponse, ctx *fiber.Ctx) error {
-	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
-	return json.NewEncoder(writer).Encode(res)
-}
-func Test(res types.AllPasswordResponse, ctx *fiber.Ctx) error {
+func SavedFieldsResponse(res types.SavedFieldsResponse, ctx *fiber.Ctx) error {
 	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
 	return json.NewEncoder(writer).Encode(res)
 }
 func KeyedResponse(res types.KeyedResponse, ctx *fiber.Ctx) error {
+	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
+	return json.NewEncoder(writer).Encode(res)
+}
+func SavedFieldResponse(res types.SavedFieldResponse, ctx *fiber.Ctx) error {
 	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
 	return json.NewEncoder(writer).Encode(res)
 }

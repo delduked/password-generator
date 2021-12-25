@@ -25,7 +25,7 @@ func SavePassword(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	_, err := controllers.Save(body)
+	savedField, err := controllers.Save(body)
 	if err != nil {
 		res := types.Response{
 			Status: fiber.StatusInternalServerError,
@@ -33,11 +33,12 @@ func SavePassword(c *fiber.Ctx) error {
 		}
 		return handlers.Response(res, c)
 	}
-	res := types.Response{
+	res := types.SavedFieldResponse{
 		Status: fiber.StatusOK,
 		Error:  nil,
+		Field:  savedField,
 	}
-	return handlers.Response(res, c)
+	return handlers.SavedFieldResponse(res, c)
 
 }
 
@@ -51,7 +52,7 @@ func SavePassword(c *fiber.Ctx) error {
 func UpdatePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	body := new(types.SavedFields)
+	body := new(types.SavedField)
 	if err := c.BodyParser(body); err != nil {
 		res := types.Response{
 			Status: fiber.StatusBadRequest,
@@ -83,7 +84,7 @@ func UpdatePassword(c *fiber.Ctx) error {
 // @Router /db/ [get]
 func GetPasswords(c *fiber.Ctx) error {
 
-	allPassword, err := controllers.GetAll()
+	savedFields, err := controllers.GetAll()
 	if err != nil {
 		res := types.Response{
 			Status: fiber.StatusInternalServerError,
@@ -92,12 +93,12 @@ func GetPasswords(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	res := types.AllPasswordResponse{
-		Status:    fiber.StatusOK,
-		Error:     err,
-		Passwords: allPassword,
+	res := types.SavedFieldsResponse{
+		Status: fiber.StatusOK,
+		Error:  err,
+		Fields: savedFields,
 	}
-	return handlers.AllPasswordResponse(res, c)
+	return handlers.SavedFieldsResponse(res, c)
 }
 
 // @Summary Get specfic password field
@@ -109,10 +110,16 @@ func GetPasswords(c *fiber.Ctx) error {
 func GetKeyedField(c *fiber.Ctx) error {
 	key := c.Params("key")
 
-	KeyedField, err := controllers.GetKeyedPassword(key)
+	KeyedField, err, length := controllers.GetKeyedPassword(key)
 	if err != nil {
 		res := types.Response{
 			Status: fiber.StatusBadRequest,
+			Error:  err,
+		}
+		return handlers.Response(res, c)
+	} else if length < 1 {
+		res := types.Response{
+			Status: fiber.StatusNotFound,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
