@@ -49,8 +49,3 @@ type KeyedResponse struct {
 	Error  error `json:"Error"`
 	Fields KeyedField
 }
-type Test struct {
-	Status    int   `json:"Status"`
-	Error     error `json:"Error"`
-	Passwords []SavedFields
-}

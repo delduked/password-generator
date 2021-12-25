@@ -7,10 +7,19 @@ import (
 	"gitlab.com/alienate/password-generator/models"
 )
 
+// @title Store and Generate random passwords
+// @version 1.0
+// @description GO API to save and generate passwords in a redisd database.
+// @contact.name Nate Del Duca
+// @contact.email nate@nated.ca
+// @host localhost:8080
+// @BasePath /
 func main() {
 
 	app := fiber.New()
 	app.Use(cors.New())
+
+	//app.Get("/swagger/*", swagger.Handler)
 
 	app.Get("/dashboard", monitor.New())
 	app.Get("/healthcheck", models.Health)

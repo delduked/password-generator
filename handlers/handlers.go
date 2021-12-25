@@ -20,7 +20,7 @@ func AllPasswordResponse(res types.AllPasswordResponse, ctx *fiber.Ctx) error {
 	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
 	return json.NewEncoder(writer).Encode(res)
 }
-func Test(res types.Test, ctx *fiber.Ctx) error {
+func Test(res types.AllPasswordResponse, ctx *fiber.Ctx) error {
 	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
 	return json.NewEncoder(writer).Encode(res)
 }

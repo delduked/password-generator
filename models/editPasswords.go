@@ -7,6 +7,12 @@ import (
 	"gitlab.com/alienate/password-generator/types"
 )
 
+// @Summary Save password
+// @Description Save a password to the redis database
+// @Accept json
+// @Success 200 {object} fiber.StatusOK
+// @Failure 400
+// @Router /db [post]
 func SavePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
@@ -35,6 +41,13 @@ func SavePassword(c *fiber.Ctx) error {
 
 }
 
+// @Summary Update password
+// @Description Update an existing password in the redis database
+// @Accept json
+// @Success 200
+// @Failure 400
+// @Failure 500
+// @Router /db [patch]
 func UpdatePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
@@ -62,6 +75,12 @@ func UpdatePassword(c *fiber.Ctx) error {
 	return handlers.Response(res, c)
 }
 
+// @Summary Get password
+// @Description Get All password in the redis database
+// @Accept json
+// @Success 200
+// @Failure 400
+// @Router /db/ [get]
 func GetPasswords(c *fiber.Ctx) error {
 
 	allPassword, err := controllers.GetAll()
@@ -73,13 +92,20 @@ func GetPasswords(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	res := types.Test{
+	res := types.AllPasswordResponse{
 		Status:    fiber.StatusOK,
 		Error:     err,
 		Passwords: allPassword,
 	}
-	return handlers.Test(res, c)
+	return handlers.AllPasswordResponse(res, c)
 }
+
+// @Summary Get specfic password field
+// @Description Get a specfic password field in the redis database
+// @Accept json
+// @Success 200
+// @Failure 400
+// @Router /db [get]
 func GetKeyedField(c *fiber.Ctx) error {
 	key := c.Params("key")
 
@@ -99,6 +125,13 @@ func GetKeyedField(c *fiber.Ctx) error {
 	}
 	return handlers.KeyedResponse(res, c)
 }
+
+// @Summary Get specfic password field
+// @Description Get a specfic password field in the redis database
+// @Accept json
+// @Success 200
+// @Failure 400
+// @Router /db [delete]
 func DeleteKeyedField(c *fiber.Ctx) error {
 	key := c.Params("key")
 

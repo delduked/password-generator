@@ -7,6 +7,11 @@ import (
 	"gitlab.com/alienate/password-generator/types"
 )
 
+// ShowAccount godoc
+// @Summary get health check
+// @Description get health status of api
+// @Produce json
+// @Router /healthcheck [get]
 func Health(c *fiber.Ctx) error {
 
 	res := types.Response{
@@ -17,6 +22,13 @@ func Health(c *fiber.Ctx) error {
 
 }
 
+// @Summary Generate new random password
+// @Description Generate a new random password with various constraints given by the user.
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 400
+// @Router /pw [get]
 func GenerateBody(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
@@ -39,6 +51,14 @@ func GenerateBody(c *fiber.Ctx) error {
 	return handlers.NewPasswordResponse(res, c)
 
 }
+
+// @Summary Generate new random password
+// @Description Generate a new random password with various constraints given by the user.
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 400
+// @Router /pw [get]
 func GenerateParams(c *fiber.Ctx) error {
 	body := new(types.NewPasswordRequest)
 	if err := c.QueryParser(body); err != nil {
