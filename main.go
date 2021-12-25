@@ -24,6 +24,10 @@ func main() {
 	app.Get("/dashboard", monitor.New())
 	app.Get("/healthcheck", models.Health)
 
+	//auth := app.Group("/auth")
+	//auth.Post("/register", models.Register)
+	//auth.Post("/signin", models.Signin)
+
 	pw := app.Group("/pw")
 
 	pw.Post("/", models.GenerateBody)
