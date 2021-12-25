@@ -10,24 +10,23 @@ import (
 func main() {
 
 	app := fiber.New()
-
 	app.Use(cors.New())
 
 	app.Get("/dashboard", monitor.New())
-
-	// health check
 	app.Get("/healthcheck", models.Health)
 
-	// Generate password
-	app.Post("/generateBody", models.GenerateBody)
-	app.Get("/generateParams", models.GenerateParams)
+	pw := app.Group("/pw")
 
-	// Password endpoints
-	app.Get("/passwords", models.GetPasswords)
-	app.Get("/password/:key", models.GetKeyedField)
-	app.Post("/password", models.SavePassword)
-	app.Patch("/password", models.UpdatePassword)
-	// app.Delete("/password", routes.DeletePassword)
+	pw.Post("/", models.GenerateBody)
+	pw.Get("/", models.GenerateParams)
+
+	db := app.Group("/db")
+
+	db.Get("/", models.GetPasswords)
+	db.Get("/:key", models.GetKeyedField)
+	db.Post("/", models.SavePassword)
+	db.Patch("/", models.UpdatePassword)
+	db.Delete("/:key", models.DeleteKeyedField)
 
 	app.Listen(":8080")
 }

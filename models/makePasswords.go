@@ -20,8 +20,8 @@ func Health(c *fiber.Ctx) error {
 func GenerateBody(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	p := new(types.NewPasswordRequest)
-	if err := c.BodyParser(p); err != nil {
+	body := new(types.NewPasswordRequest)
+	if err := c.BodyParser(body); err != nil {
 		res := types.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
@@ -29,7 +29,7 @@ func GenerateBody(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	password := controllers.GenerateResponse(p)
+	password := controllers.GenerateResponse(body)
 	res := types.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
@@ -40,8 +40,8 @@ func GenerateBody(c *fiber.Ctx) error {
 
 }
 func GenerateParams(c *fiber.Ctx) error {
-	p := new(types.NewPasswordRequest)
-	if err := c.QueryParser(p); err != nil {
+	body := new(types.NewPasswordRequest)
+	if err := c.QueryParser(body); err != nil {
 		res := types.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
@@ -49,7 +49,7 @@ func GenerateParams(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	password := controllers.GenerateResponse(p)
+	password := controllers.GenerateResponse(body)
 	res := types.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
