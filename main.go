@@ -34,6 +34,7 @@ func main() {
 	db.Get("/", models.GetPasswords)
 	db.Get("/:key", models.GetKeyedField)
 	db.Post("/", models.SavePassword)
+	db.Put("/", models.SaveMany)
 	db.Patch("/", models.UpdatePassword)
 	db.Delete("/:key", models.DeleteKeyedField)
 

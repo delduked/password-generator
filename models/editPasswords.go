@@ -39,7 +39,33 @@ func SavePassword(c *fiber.Ctx) error {
 		Field:  savedField,
 	}
 	return handlers.SavedFieldResponse(res, c)
+}
 
+func SaveMany(c *fiber.Ctx) error {
+	c.Accepts("application/json")
+
+	body := new([]types.NewPasswordReqSave)
+	if err := c.BodyParser(body); err != nil {
+		res := types.Response{
+			Status: fiber.StatusBadRequest,
+			Error:  err,
+		}
+		return handlers.Response(res, c)
+	}
+
+	err := controllers.SaveMany(*body)
+	if err != nil {
+		res := types.Response{
+			Status: fiber.StatusInternalServerError,
+			Error:  err,
+		}
+		return handlers.Response(res, c)
+	}
+	res := types.Response{
+		Status: fiber.StatusOK,
+		Error:  nil,
+	}
+	return handlers.Response(res, c)
 }
 
 // @Summary Update password

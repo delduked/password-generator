@@ -7,6 +7,27 @@ import (
 	"gitlab.com/alienate/password-generator/types"
 )
 
+func SaveMany(value []types.NewPasswordReqSave) error {
+
+	var err error
+	var key string
+	for _, j := range value {
+		key = (uuid.New()).String()
+		_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
+			rdb.HSet(config.RedisCtx, key, "Account", j.Account)
+			rdb.HSet(config.RedisCtx, key, "Username", j.Username)
+			rdb.HSet(config.RedisCtx, key, "Password", j.Password)
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return err
+
+}
+
 func Save(value *types.NewPasswordReqSave) (types.SavedField, error) {
 
 	key := (uuid.New()).String()
