@@ -13,17 +13,20 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/fasthttp/websocket v1.4.3-rc.10 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
+	github.com/gofiber/websocket/v2 v2.0.14 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.13.4 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/savsgio/gotils v0.0.0-20210921075833-21a6215cb0e4 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2 // indirect
 	github.com/swaggo/swag v1.7.8 // indirect
