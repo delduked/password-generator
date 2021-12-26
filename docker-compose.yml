@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  passwordapi:
+    build:
+      context: .
+      dockerfile: image.dockerfile
+    restart: "unless-stopped"
+    ports:
+      - 5324:8080
+
