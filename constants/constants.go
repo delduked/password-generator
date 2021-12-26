@@ -4,5 +4,5 @@ const (
 	Upper   = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	Lower   = "abcdefghijklmnopqrstuvwxyz"
 	Numbers = "0123456789"
-	Special = `!"#$%&'()*+,-./:;<=>?@[\]^_{|}~`
+	Special = `!#$%&*+-=?@[]^_|`
 )
