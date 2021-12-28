@@ -28,3 +28,7 @@ func SavedFieldResponse(res types.SavedFieldResponse, ctx *fiber.Ctx) error {
 	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
 	return json.NewEncoder(writer).Encode(res)
 }
+func JWTResponse(res types.JWT, ctx *fiber.Ctx) error {
+	writer := ctx.Type("json", "utf-8").Response().BodyWriter()
+	return json.NewEncoder(writer).Encode(res)
+}

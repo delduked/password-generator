@@ -21,6 +21,8 @@ func main() {
 
 	//app.Get("/swagger/*", swagger.Handler)
 
+	app.Get("/auth", models.AuthMiddleware)
+
 	app.Get("/dashboard", monitor.New())
 	app.Get("/healthcheck", models.Health)
 
