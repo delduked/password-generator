@@ -20,8 +20,12 @@ func main() {
 	app.Use(cors.New())
 
 	//app.Get("/swagger/*", swagger.Handler)
+	app.Get("/", models.GenerateNewToken)
 
-	app.Get("/auth", models.AuthMiddleware)
+	auth := app.Group("/auth", models.Auth)
+	auth.Get("/restricted", models.YouPassed)
+
+	//app.Get("/auth", models.AuthMiddleware)
 
 	app.Get("/dashboard", monitor.New())
 	app.Get("/healthcheck", models.Health)
