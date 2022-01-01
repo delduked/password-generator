@@ -6,12 +6,13 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"gitlab.com/alienate/password-generator/config"
+	"gitlab.com/alienate/password-generator/schema"
 )
 
-func NewToken() (string, error) {
+func GenerateNewToken() (string, error) {
 	// Create the Claims
 	claims := jwt.MapClaims{
-		"exp": time.Now().Add(time.Minute * 1).Unix(),
+		"exp": time.Now().Add(time.Hour * 1).Unix(),
 	}
 
 	// Create token
@@ -22,13 +23,9 @@ func NewToken() (string, error) {
 	if err != nil {
 		return t, err
 	}
-	fmt.Println(t)
 	return t, err
 }
 
-// func ValidateToken(){
-
-// }
 func Verify(bearer string) (string, error) {
 
 	token, err := jwt.Parse(bearer, func(token *jwt.Token) (interface{}, error) {
@@ -41,10 +38,21 @@ func Verify(bearer string) (string, error) {
 	if err != nil {
 		return "nil", err
 	}
-	fmt.Println(token.Claims.(jwt.Claims))
+
 	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
 		return "nil", fmt.Errorf("Validation Error")
 	}
 
 	return token.Raw, nil
+}
+
+func CheckCredentials(body *schema.UserAccount) error {
+
+	if body.Username == "nate" && body.Password == "n4t4hn43l" {
+		return nil
+	}
+	if body.Username != "nate" || body.Password != "n4t4hn43l" {
+		return fmt.Errorf("incorrect username or password")
+	}
+	return fmt.Errorf("System error")
 }

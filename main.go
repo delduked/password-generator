@@ -19,23 +19,19 @@ func main() {
 	app := fiber.New()
 	app.Use(cors.New())
 
-	//app.Get("/swagger/*", swagger.Handler)
-	app.Get("/", models.GenerateNewToken)
-
-	auth := app.Group("/auth", models.Auth)
-	auth.Get("/restricted", models.YouPassed)
-
-	//app.Get("/auth", models.AuthMiddleware)
-
-	app.Get("/dashboard", monitor.New())
+	app.Get("/", models.Health)
 	app.Get("/healthcheck", models.Health)
+	app.Get("/dashboard", monitor.New())
 
-	pw := app.Group("/pw")
+	// generate new password with either JSON or Parameters
+	app.Post("/pw", models.GenerateBody)
+	app.Get("/pw", models.GenerateParams)
 
-	pw.Post("/", models.GenerateBody)
-	pw.Get("/", models.GenerateParams)
+	// get acceess token in order to make requests to the redis database
+	app.Post("/getAccessToken", models.GenerateNewToken)
 
-	db := app.Group("/db")
+	// authentication middleware behind redis access
+	db := app.Group("/db", models.Auth)
 
 	db.Get("/", models.GetPasswords)
 	db.Get("/:key", models.GetKeyedField)

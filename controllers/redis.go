@@ -4,10 +4,10 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	"gitlab.com/alienate/password-generator/config"
-	"gitlab.com/alienate/password-generator/types"
+	"gitlab.com/alienate/password-generator/schema"
 )
 
-func SaveMany(value []types.NewPasswordReqSave) error {
+func SaveMany(value []schema.KeyedField) error {
 
 	var err error
 	var key string
@@ -25,13 +25,12 @@ func SaveMany(value []types.NewPasswordReqSave) error {
 	}
 
 	return err
-
 }
 
-func Save(value *types.NewPasswordReqSave) (types.SavedField, error) {
+func Save(value *schema.KeyedField) (schema.SavedField, error) {
 
 	key := (uuid.New()).String()
-	var savedField types.SavedField
+	var savedField schema.SavedField
 
 	// Set some fields.
 	_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
@@ -45,7 +44,7 @@ func Save(value *types.NewPasswordReqSave) (types.SavedField, error) {
 		return savedField, err
 	}
 
-	savedField = types.SavedField{
+	savedField = schema.SavedField{
 		Key:      key,
 		Account:  value.Account,
 		Username: value.Username,
@@ -53,12 +52,11 @@ func Save(value *types.NewPasswordReqSave) (types.SavedField, error) {
 	}
 
 	return savedField, nil
-
 }
-func GetAll() ([]types.SavedField, error) {
+func GetAll() ([]schema.SavedField, error) {
 
-	savedFields := []types.SavedField{}
-	var keyedField types.KeyedField
+	savedFields := []schema.SavedField{}
+	var keyedField schema.KeyedField
 
 	length, err := config.Rdb.Keys(config.RedisCtx, "*").Result()
 	if err != nil {
@@ -70,7 +68,7 @@ func GetAll() ([]types.SavedField, error) {
 		if err != nil {
 			return savedFields, err
 		}
-		savedField := types.SavedField{
+		savedField := schema.SavedField{
 			Key:      j,
 			Account:  keyedField.Account,
 			Username: keyedField.Username,
@@ -81,9 +79,9 @@ func GetAll() ([]types.SavedField, error) {
 
 	return savedFields, err
 }
-func GetKeyedPassword(key string) (types.KeyedField, error, int) {
+func GetKeyedPassword(key string) (schema.KeyedField, error, int) {
 
-	var keyedField types.KeyedField
+	var keyedField schema.KeyedField
 	var Error error
 	length, err := config.Rdb.HGetAll(config.RedisCtx, key).Result()
 	if err == redis.Nil {
@@ -100,7 +98,7 @@ func GetKeyedPassword(key string) (types.KeyedField, error, int) {
 	}
 	return keyedField, nil, len(length)
 }
-func Update(value *types.SavedField) (string, error) {
+func Update(value *schema.SavedField) (string, error) {
 
 	_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
 		rdb.HSet(config.RedisCtx, value.Key, "Account", value.Account)
@@ -116,12 +114,11 @@ func Update(value *types.SavedField) (string, error) {
 	return "success", nil
 }
 
-func Delete(key string) (types.KeyedField, error) {
+func Delete(key string) (schema.KeyedField, error) {
 
-	var keyedField types.KeyedField
+	var keyedField schema.KeyedField
 
 	err := config.Rdb.Del(config.RedisCtx, key).Err()
-	//err := config.Rdb.HGetAll(config.RedisCtx, key).Scan(&keyedField)
 	if err != nil {
 		return keyedField, err
 	}

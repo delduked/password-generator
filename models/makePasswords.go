@@ -4,17 +4,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/alienate/password-generator/controllers"
 	"gitlab.com/alienate/password-generator/handlers"
-	"gitlab.com/alienate/password-generator/types"
+	"gitlab.com/alienate/password-generator/schema"
 )
 
-// ShowAccount godoc
-// @Summary get health check
-// @Description get health status of api
-// @Produce json
-// @Router /healthcheck [get]
 func Health(c *fiber.Ctx) error {
 
-	res := types.Response{
+	res := schema.Response{
 		Status: fiber.StatusOK,
 		Error:  nil,
 	}
@@ -22,19 +17,12 @@ func Health(c *fiber.Ctx) error {
 
 }
 
-// @Summary Generate new random password
-// @Description Generate a new random password with various constraints given by the user.
-// @Accept json
-// @Produce json
-// @Success 200
-// @Failure 400
-// @Router /pw [get]
 func GenerateBody(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	body := new(types.NewPasswordRequest)
+	body := new(schema.NewPasswordRequest)
 	if err := c.BodyParser(body); err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
@@ -42,7 +30,7 @@ func GenerateBody(c *fiber.Ctx) error {
 	}
 
 	password := controllers.GenerateResponse(body)
-	res := types.NewPasswordResponse{
+	res := schema.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: password,
@@ -52,17 +40,10 @@ func GenerateBody(c *fiber.Ctx) error {
 
 }
 
-// @Summary Generate new random password
-// @Description Generate a new random password with various constraints given by the user.
-// @Accept json
-// @Produce json
-// @Success 200
-// @Failure 400
-// @Router /pw [get]
 func GenerateParams(c *fiber.Ctx) error {
-	body := new(types.NewPasswordRequest)
+	body := new(schema.NewPasswordRequest)
 	if err := c.QueryParser(body); err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
@@ -70,7 +51,7 @@ func GenerateParams(c *fiber.Ctx) error {
 	}
 
 	password := controllers.GenerateResponse(body)
-	res := types.NewPasswordResponse{
+	res := schema.NewPasswordResponse{
 		Status:   fiber.StatusOK,
 		Error:    nil,
 		Password: password,

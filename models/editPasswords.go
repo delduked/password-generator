@@ -4,21 +4,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/alienate/password-generator/controllers"
 	"gitlab.com/alienate/password-generator/handlers"
-	"gitlab.com/alienate/password-generator/types"
+	"gitlab.com/alienate/password-generator/schema"
 )
 
-// @Summary Save password
-// @Description Save a password to the redis database
-// @Accept json
-// @Success 200 {object} fiber.StatusOK
-// @Failure 400
-// @Router /db [post]
 func SavePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	body := new(types.NewPasswordReqSave)
-	if err := c.BodyParser(body); err != nil {
-		res := types.Response{
+	body := new(schema.KeyedField)
+	err := c.BodyParser(body)
+	if err != nil {
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
@@ -27,13 +22,13 @@ func SavePassword(c *fiber.Ctx) error {
 
 	savedField, err := controllers.Save(body)
 	if err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	}
-	res := types.SavedFieldResponse{
+	res := schema.SavedFieldResponse{
 		Status: fiber.StatusOK,
 		Error:  nil,
 		Field:  savedField,
@@ -44,9 +39,9 @@ func SavePassword(c *fiber.Ctx) error {
 func SaveMany(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	body := new([]types.NewPasswordReqSave)
+	body := new([]schema.KeyedField)
 	if err := c.BodyParser(body); err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
@@ -55,13 +50,13 @@ func SaveMany(c *fiber.Ctx) error {
 
 	err := controllers.SaveMany(*body)
 	if err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	}
-	res := types.Response{
+	res := schema.Response{
 		Status: fiber.StatusOK,
 		Error:  nil,
 	}
@@ -78,9 +73,9 @@ func SaveMany(c *fiber.Ctx) error {
 func UpdatePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
-	body := new(types.SavedField)
+	body := new(schema.SavedField)
 	if err := c.BodyParser(body); err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
@@ -89,13 +84,13 @@ func UpdatePassword(c *fiber.Ctx) error {
 
 	_, err := controllers.Update(body)
 	if err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	}
-	res := types.Response{
+	res := schema.Response{
 		Status: fiber.StatusOK,
 		Error:  nil,
 	}
@@ -112,14 +107,14 @@ func GetPasswords(c *fiber.Ctx) error {
 
 	savedFields, err := controllers.GetAll()
 	if err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	}
 
-	res := types.SavedFieldsResponse{
+	res := schema.SavedFieldsResponse{
 		Status: fiber.StatusOK,
 		Error:  err,
 		Fields: savedFields,
@@ -138,20 +133,20 @@ func GetKeyedField(c *fiber.Ctx) error {
 
 	KeyedField, err, length := controllers.GetKeyedPassword(key)
 	if err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	} else if length < 1 {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusNotFound,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	}
 
-	res := types.KeyedResponse{
+	res := schema.KeyedResponse{
 		Status: fiber.StatusOK,
 		Error:  err,
 		Fields: KeyedField,
@@ -170,14 +165,14 @@ func DeleteKeyedField(c *fiber.Ctx) error {
 
 	_, err := controllers.Delete(key)
 	if err != nil {
-		res := types.Response{
+		res := schema.Response{
 			Status: fiber.StatusBadRequest,
 			Error:  err,
 		}
 		return handlers.Response(res, c)
 	}
 
-	res := types.Response{
+	res := schema.Response{
 		Status: fiber.StatusOK,
 		Error:  err,
 	}

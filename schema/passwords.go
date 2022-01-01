@@ -1,4 +1,4 @@
-package types
+package schema
 
 type NewPasswordRequest struct {
 	Length  int  `json:"Length" query:"Length"`
@@ -13,10 +13,6 @@ type NewPasswordResponse struct {
 	Error    error  `json:"Error" query:"Error"`
 	Password string `json:"Password" query:"Password"`
 }
-type Response struct {
-	Status int   `json:"Status"`
-	Error  error `json:"Error"`
-}
 
 type SavedField struct {
 	Key      string `json:"Key"`
@@ -24,15 +20,15 @@ type SavedField struct {
 	Username string `json:"Username"`
 	Password string `json:"Password"`
 }
-type NewPasswordReqSave struct {
-	Account  string `json:"Account"`
-	Username string `json:"username"`
-	Password string `json:"Password"`
-}
 type KeyedField struct {
 	Account  string `json:"Account" redis:"Account"`
 	Username string `json:"Username" redis:"Username"`
 	Password string `json:"Password" redis:"Password"`
+}
+type NewPasswordReqSave struct {
+	Account  string `json:"Account"`
+	Username string `json:"Username"`
+	Password string `json:"Password"`
 }
 type KeyedResponse struct {
 	Status int   `json:"Status"`
@@ -48,10 +44,4 @@ type SavedFieldsResponse struct {
 	Status int   `json:"Status"`
 	Error  error `json:"Error"`
 	Fields []SavedField
-}
-type JWT struct {
-	Status int    `json:"Status"`
-	Error  error  `json:"Error"`
-	Valid  bool   `json:"Valid"`
-	Bearer string `json:"Bearer"`
 }

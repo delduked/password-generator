@@ -5,10 +5,10 @@ import (
 	"math/big"
 
 	"gitlab.com/alienate/password-generator/constants"
-	"gitlab.com/alienate/password-generator/types"
+	"gitlab.com/alienate/password-generator/schema"
 )
 
-func GenerateResponse(req *types.NewPasswordRequest) string {
+func GenerateResponse(req *schema.NewPasswordRequest) string {
 
 	value := assignment(req.Special, req.Number, req.Lower, req.Upper)
 	validatedLength := checkLength(req.Length)
