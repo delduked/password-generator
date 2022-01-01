@@ -1,38 +1,43 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	"gitlab.com/alienate/password-generator/config"
 	"gitlab.com/alienate/password-generator/schema"
 )
 
-func CheckIfUserExists(value *schema.UserAccount) (bool, error) {
+func CheckIfOldUserExists(value *schema.UserAccount) (bool, error) {
 
-	var savedUser schema.UserAccount
-
-	length, err := config.UsersRdb.Keys(config.RedisCtx, "*").Result()
+	fields, err := config.UsersRdb.Keys(config.RedisCtx, "*").Result()
 	if err != nil {
 		return false, err
 	}
 
-	for _, j := range length {
-		err := config.UsersRdb.HGetAll(config.RedisCtx, j).Scan(&savedUser)
+	for _, j := range fields {
+		field, err := config.UsersRdb.HGetAll(config.RedisCtx, j).Result()
 		if err != nil {
 			return false, err
+		} else if len(field) == 0 {
+			return false, err
+		} else if err == redis.Nil {
+			return false, err
 		}
-		if savedUser.Username == value.Username && savedUser.Password == value.Password {
+
+		if field["Username"] == value.Username && field["Password"] == value.Password {
 			return true, nil
 		}
 	}
 
-	return false, nil
+	return false, fmt.Errorf("Username or password is incorrect")
 }
 
 func SaveUser(value *schema.SignUp) error {
 
 	// Generate a new uuid for the user if it does not exist
-	exists, err := doesUserExist(value)
+	exists, err := CheckIfNewUserExists(value)
 	if err != nil || exists {
 		return err
 	}
@@ -51,28 +56,28 @@ func SaveUser(value *schema.SignUp) error {
 
 	return nil
 }
-func doesUserExist(value *schema.SignUp) (bool, error) {
+func CheckIfNewUserExists(value *schema.SignUp) (bool, error) {
 
-	var savedUser schema.UserAccount
+	//var keyedField schema.UserAccount
+	//var savedField schema.SavedField
 
-	// Count how many fields exist in the database
 	length, err := config.UsersRdb.Keys(config.RedisCtx, "*").Result()
 	if err != nil {
-		// If there is an error checking the redis server, return the error
 		return false, err
 	}
 
-	// Loop over all the fields saved in the database
 	for _, j := range length {
-		// Get each fields value using the uuid and parse into the struct
-		err := config.UsersRdb.HGetAll(config.RedisCtx, j).Scan(&savedUser)
+		length, err := config.UsersRdb.HGetAll(config.RedisCtx, j).Result()
 		if err != nil {
-			// If there is an error, return it
+			return false, err
+		} else if len(length) == 0 {
+			return false, err
+		} else if err == redis.Nil {
 			return false, err
 		}
-		if savedUser.Username == value.Username {
-			// If the username exists, return true
-			return true, nil
+
+		if length["Username"] == value.Username {
+			return true, fmt.Errorf("Username already exists")
 		}
 	}
 	// If the username does not exist, return false with no error

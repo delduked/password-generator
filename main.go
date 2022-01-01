@@ -28,7 +28,8 @@ func main() {
 	app.Get("/pw", models.GenerateParams)
 
 	// get acceess token in order to make requests to the redis database
-	app.Post("/getAccessToken", models.GenerateNewToken)
+	app.Post("/signup", models.SignUp)
+	app.Post("/signin", models.SignIn)
 
 	// authentication middleware behind redis access
 	db := app.Group("/db", models.Auth)

@@ -64,23 +64,23 @@ func Verify(bearer string) (string, error) {
 	return token.Raw, nil
 }
 
-func CheckCredentials(body *schema.UserAccount) error {
+// func CheckCredentials(body *schema.UserAccount) error {
 
-	if body.Username == "nate" && body.Password == "n4t4hn43l" {
+// 	if body.Username == "nate" && body.Password == "n4th4n43l" {
+// 		return nil
+// 	}
+// 	if body.Username != "nate" || body.Password != "n4th4n43l" {
+// 		return fmt.Errorf("incorrect username or password")
+// 	}
+// 	return fmt.Errorf("System error")
+// }
+
+func CheckSecret(body *schema.SignUp) error {
+	if body.Secret == "n4th4n43l" {
 		return nil
 	}
-	if body.Username != "nate" || body.Password != "n4t4hn43l" {
-		return fmt.Errorf("incorrect username or password")
+	if body.Secret != "n4th4n43l" {
+		return fmt.Errorf("incorrect secret")
 	}
 	return fmt.Errorf("System error")
-}
-
-func CheckSecret(body *schema.SignUp) (*schema.SignUp, error) {
-	if body.Secret == "n4t4hn43l" {
-		return body, nil
-	}
-	if body.Secret != "n4t4hn43l" {
-		return body, fmt.Errorf("incorrect secret")
-	}
-	return body, fmt.Errorf("System error")
 }
