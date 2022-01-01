@@ -32,7 +32,6 @@ func main() {
 
 	// authentication middleware behind redis access
 	db := app.Group("/db", models.Auth)
-
 	db.Get("/", models.GetPasswords)
 	db.Get("/:key", models.GetKeyedField)
 	db.Post("/", models.SavePassword)
