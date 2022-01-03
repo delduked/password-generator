@@ -9,23 +9,6 @@ import (
 	"gitlab.com/alienate/password-generator/schema"
 )
 
-func GenerateNewToken() (string, error) {
-	// Create the Claims
-	claims := jwt.MapClaims{
-		"exp": time.Now().Add(time.Hour * 1).Unix(),
-	}
-
-	// Create token
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// Generate encoded token and send it as response.
-	t, err := token.SignedString(config.Secret)
-	if err != nil {
-		return t, err
-	}
-	return t, err
-}
-
 func NewTokenWithUserName(body *schema.SignUp) (string, error) {
 	// Create the Claims
 	claims := jwt.MapClaims{
@@ -46,6 +29,7 @@ func NewTokenWithUserName(body *schema.SignUp) (string, error) {
 
 func Verify(bearer string) (string, error) {
 
+	// Parse the token to check if it's valid
 	token, err := jwt.Parse(bearer, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -57,23 +41,20 @@ func Verify(bearer string) (string, error) {
 		return "nil", err
 	}
 
-	if _, ok := token.Claims.(jwt.Claims); !ok && !token.Valid {
-		return "nil", fmt.Errorf("Validation Error")
+	// Decode the second portion of the JWT token for the username
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "nil", fmt.Errorf("could not parse claims")
 	}
 
-	return token.Raw, nil
+	// Return the username from claims
+	username, ok := claims["Username"].(string)
+	if !ok {
+		return "nil", fmt.Errorf("no field Usernamein JWT")
+	}
+
+	return username, nil
 }
-
-// func CheckCredentials(body *schema.UserAccount) error {
-
-// 	if body.Username == "nate" && body.Password == "n4th4n43l" {
-// 		return nil
-// 	}
-// 	if body.Username != "nate" || body.Password != "n4th4n43l" {
-// 		return fmt.Errorf("incorrect username or password")
-// 	}
-// 	return fmt.Errorf("System error")
-// }
 
 func CheckSecret(body *schema.SignUp) error {
 	if body.Secret == "n4th4n43l" {

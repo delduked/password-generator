@@ -17,7 +17,12 @@ import (
 func main() {
 
 	app := fiber.New()
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		ExposeHeaders: "*",
+		//AllowHeaders:     "*",
+		AllowCredentials: true,
+		AllowOrigins:     "http://localhost,http://localhost:80, http://localhost:8080, http://localhost:3000",
+	}))
 
 	app.Get("/", models.Health)
 	app.Get("/healthcheck", models.Health)

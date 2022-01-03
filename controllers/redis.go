@@ -7,16 +7,16 @@ import (
 	"gitlab.com/alienate/password-generator/schema"
 )
 
-func SaveMany(value []schema.KeyedField) error {
+func SaveMany(username string, value []schema.KeyedField) error {
 
 	var err error
 	var key string
 	for _, j := range value {
 		key = (uuid.New()).String()
 		_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
-			rdb.HSet(config.RedisCtx, key, "Account", j.Account)
-			rdb.HSet(config.RedisCtx, key, "Username", j.Username)
-			rdb.HSet(config.RedisCtx, key, "Password", j.Password)
+			rdb.HSet(config.RedisCtx, username+"::"+key, "Account", j.Account)
+			rdb.HSet(config.RedisCtx, username+"::"+key, "Username", j.Username)
+			rdb.HSet(config.RedisCtx, username+"::"+key, "Password", j.Password)
 			return nil
 		})
 		if err != nil {
@@ -27,16 +27,16 @@ func SaveMany(value []schema.KeyedField) error {
 	return err
 }
 
-func Save(value *schema.KeyedField) (schema.SavedField, error) {
+func Save(username string, value *schema.KeyedField) (schema.SavedField, error) {
 
 	key := (uuid.New()).String()
 	var savedField schema.SavedField
 
 	// Set some fields.
 	_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
-		rdb.HSet(config.RedisCtx, key, "Account", value.Account)
-		rdb.HSet(config.RedisCtx, key, "Username", value.Username)
-		rdb.HSet(config.RedisCtx, key, "Password", value.Password)
+		rdb.HSet(config.RedisCtx, username+"::"+key, "Account", value.Account)
+		rdb.HSet(config.RedisCtx, username+"::"+key, "Username", value.Username)
+		rdb.HSet(config.RedisCtx, username+"::"+key, "Password", value.Password)
 		return nil
 	})
 
@@ -45,7 +45,7 @@ func Save(value *schema.KeyedField) (schema.SavedField, error) {
 	}
 
 	savedField = schema.SavedField{
-		Key:      key,
+		Key:      username + "::" + key,
 		Account:  value.Account,
 		Username: value.Username,
 		Password: value.Password,
@@ -53,28 +53,27 @@ func Save(value *schema.KeyedField) (schema.SavedField, error) {
 
 	return savedField, nil
 }
-func GetAll() ([]schema.SavedField, error) {
+func GetAll(username string) ([]schema.SavedField, error) {
 
 	savedFields := []schema.SavedField{}
-	var keyedField schema.KeyedField
 
-	length, err := config.Rdb.Keys(config.RedisCtx, "*").Result()
+	length, err := config.Rdb.Keys(config.RedisCtx, username+"::*").Result()
 	if err != nil {
 		return savedFields, err
 	}
 
+	var savedField schema.SavedField
 	for _, j := range length {
-		err := config.Rdb.HGetAll(config.RedisCtx, j).Scan(&keyedField)
-		if err != nil {
-			return savedFields, err
+		field, err := config.Rdb.HGetAll(config.RedisCtx, j).Result()
+		if err == nil {
+			savedField = schema.SavedField{
+				Key:      j,
+				Account:  field["Account"],
+				Username: field["Username"],
+				Password: field["Password"],
+			}
+			savedFields = append(savedFields, savedField)
 		}
-		savedField := schema.SavedField{
-			Key:      j,
-			Account:  keyedField.Account,
-			Username: keyedField.Username,
-			Password: keyedField.Password,
-		}
-		savedFields = append(savedFields, savedField)
 	}
 
 	return savedFields, err
@@ -98,12 +97,12 @@ func GetKeyedPassword(key string) (schema.KeyedField, error, int) {
 	}
 	return keyedField, nil, len(length)
 }
-func Update(value *schema.SavedField) (string, error) {
+func Update(username string, value *schema.SavedField) (string, error) {
 
 	_, err := config.Rdb.Pipelined(config.RedisCtx, func(rdb redis.Pipeliner) error {
-		rdb.HSet(config.RedisCtx, value.Key, "Account", value.Account)
-		rdb.HSet(config.RedisCtx, value.Key, "Username", value.Username)
-		rdb.HSet(config.RedisCtx, value.Key, "Password", value.Password)
+		rdb.HSet(config.RedisCtx, username+"::"+value.Key, "Account", value.Account)
+		rdb.HSet(config.RedisCtx, username+"::"+value.Key, "Username", value.Username)
+		rdb.HSet(config.RedisCtx, username+"::"+value.Key, "Password", value.Password)
 		return nil
 	})
 

@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"gitlab.com/alienate/password-generator/controllers"
 	"gitlab.com/alienate/password-generator/handlers"
@@ -17,10 +19,9 @@ func YouPassed(c *fiber.Ctx) error {
 }
 
 func Auth(c *fiber.Ctx) error {
-
 	bearer := c.Cookies("authToken")
-
-	_, err := controllers.Verify(bearer)
+	fmt.Println(bearer)
+	username, err := controllers.Verify(bearer)
 	if err != nil {
 		res := schema.JWT{
 			Status: fiber.StatusForbidden,
@@ -29,6 +30,8 @@ func Auth(c *fiber.Ctx) error {
 		}
 		return handlers.JWTResponse(res, c)
 	}
+
+	c.Locals("username", username)
 
 	return c.Next()
 }

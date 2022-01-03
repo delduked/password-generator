@@ -20,7 +20,8 @@ func SavePassword(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	savedField, err := controllers.Save(body)
+	username := c.Locals("username").(string)
+	savedField, err := controllers.Save(username, body)
 	if err != nil {
 		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
@@ -48,7 +49,8 @@ func SaveMany(c *fiber.Ctx) error {
 		return handlers.Response(res, c)
 	}
 
-	err := controllers.SaveMany(*body)
+	username := c.Locals("username").(string)
+	err := controllers.SaveMany(username, *body)
 	if err != nil {
 		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
@@ -56,6 +58,7 @@ func SaveMany(c *fiber.Ctx) error {
 		}
 		return handlers.Response(res, c)
 	}
+
 	res := schema.Response{
 		Status: fiber.StatusOK,
 		Error:  nil,
@@ -63,13 +66,6 @@ func SaveMany(c *fiber.Ctx) error {
 	return handlers.Response(res, c)
 }
 
-// @Summary Update password
-// @Description Update an existing password in the redis database
-// @Accept json
-// @Success 200
-// @Failure 400
-// @Failure 500
-// @Router /db [patch]
 func UpdatePassword(c *fiber.Ctx) error {
 	c.Accepts("application/json")
 
@@ -97,15 +93,10 @@ func UpdatePassword(c *fiber.Ctx) error {
 	return handlers.Response(res, c)
 }
 
-// @Summary Get password
-// @Description Get All password in the redis database
-// @Accept json
-// @Success 200
-// @Failure 400
-// @Router /db/ [get]
 func GetPasswords(c *fiber.Ctx) error {
 
-	savedFields, err := controllers.GetAll()
+	username := c.Locals("username").(string)
+	savedFields, err := controllers.GetAll(username)
 	if err != nil {
 		res := schema.Response{
 			Status: fiber.StatusInternalServerError,
@@ -122,16 +113,11 @@ func GetPasswords(c *fiber.Ctx) error {
 	return handlers.SavedFieldsResponse(res, c)
 }
 
-// @Summary Get specfic password field
-// @Description Get a specfic password field in the redis database
-// @Accept json
-// @Success 200
-// @Failure 400
-// @Router /db [get]
 func GetKeyedField(c *fiber.Ctx) error {
 	key := c.Params("key")
 
-	KeyedField, err, length := controllers.GetKeyedPassword(key)
+	username := c.Locals("username").(string)
+	KeyedField, err, length := controllers.GetKeyedPassword(username + "::" + key)
 	if err != nil {
 		res := schema.Response{
 			Status: fiber.StatusBadRequest,
@@ -154,12 +140,6 @@ func GetKeyedField(c *fiber.Ctx) error {
 	return handlers.KeyedResponse(res, c)
 }
 
-// @Summary Get specfic password field
-// @Description Get a specfic password field in the redis database
-// @Accept json
-// @Success 200
-// @Failure 400
-// @Router /db [delete]
 func DeleteKeyedField(c *fiber.Ctx) error {
 	key := c.Params("key")
 

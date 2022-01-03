@@ -58,9 +58,6 @@ func SaveUser(value *schema.SignUp) error {
 }
 func CheckIfNewUserExists(value *schema.SignUp) (bool, error) {
 
-	//var keyedField schema.UserAccount
-	//var savedField schema.SavedField
-
 	length, err := config.UsersRdb.Keys(config.RedisCtx, "*").Result()
 	if err != nil {
 		return false, err
