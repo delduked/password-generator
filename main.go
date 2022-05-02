@@ -29,14 +29,5 @@ func main() {
 	pw.Post("/", models.GenerateBody)
 	pw.Get("/", models.GenerateParams)
 
-	db := app.Group("/db")
-
-	db.Get("/", models.GetPasswords)
-	db.Get("/:key", models.GetKeyedField)
-	db.Post("/", models.SavePassword)
-	db.Put("/", models.SaveMany)
-	db.Patch("/", models.UpdatePassword)
-	db.Delete("/:key", models.DeleteKeyedField)
-
 	app.Listen(":8080")
 }
